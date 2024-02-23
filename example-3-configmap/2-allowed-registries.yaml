@@ -1,0 +1,32 @@
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: "allowed-registries"
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [ "", "apps", "batch" ]
+        apiVersions: [ "v1" ]
+        operations: [ "CREATE", "UPDATE" ]
+        resources: [ "pods", "deployments", "daemonsets", "statefulsets", "replicasets", "cronjobs", "jobs" ]
+  paramKind:
+    apiVersion: v1
+    kind: ConfigMap
+  variables:
+    - name: podSpec
+      expression: >
+        object.kind == "Pod" ? object.spec : (
+            object.kind in ["ReplicaSet", "Deployment", "DaemonSet", "StatefulSet", "Job"] ? object.spec.template.spec : (
+                object.kind == "CronJob" ? object.spec.jobTemplate.spec.template.spec : null)
+        )
+    - name: allContainers
+      expression: 'variables.podSpec.containers + variables.podSpec.?initContainers.orValue([])'
+    - name: allowedRegistries
+      expression: 'params.data.allowedRegistries.split(",")'
+  validations:
+    - expression: >
+        variables.allContainers.all(c,
+          variables.allowedRegistries.exists(i, c.image.startsWith(i))
+        )
+      message: "Forbidden image registry"
