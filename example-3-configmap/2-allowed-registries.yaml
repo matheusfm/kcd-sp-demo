@@ -14,6 +14,8 @@ spec:
     apiVersion: v1
     kind: ConfigMap
   variables:
+    - name: allowedRegistries
+      expression: 'params.data.allowedRegistries.split(",")'
     - name: podSpec
       expression: >
         object.kind == "Pod" ? object.spec : (
@@ -22,8 +24,6 @@ spec:
         )
     - name: allContainers
       expression: 'variables.podSpec.containers + variables.podSpec.?initContainers.orValue([])'
-    - name: allowedRegistries
-      expression: 'params.data.allowedRegistries.split(",")'
   validations:
     - expression: >
         variables.allContainers.all(c,
