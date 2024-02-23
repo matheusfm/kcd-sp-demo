@@ -1,0 +1,18 @@
+# VAP
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: "privileged-container"
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups:   [""]
+        apiVersions: ["v1"]
+        operations:  ["CREATE", "UPDATE"]
+        resources:   ["pods"]
+  validations:
+    - expression: >
+        object.spec.containers.all(c,
+            c.?securityContext.?privileged.orValue(false) == false
+        )
