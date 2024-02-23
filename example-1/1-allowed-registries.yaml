@@ -1,17 +1,18 @@
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: ValidatingAdmissionPolicy
 metadata:
-  name: "privileged-container"
+  name: "allowed-registries"
 spec:
   failurePolicy: Fail
   matchConstraints:
     resourceRules:
-      - apiGroups:   [""]
+      - apiGroups:   ["apps"]
         apiVersions: ["v1"]
         operations:  ["CREATE", "UPDATE"]
-        resources:   ["pods"]
+        resources:   ["deployments"]
   validations:
     - expression: >
-        object.spec.containers.all(c,
-            c.?securityContext.?privileged.orValue(false) == false
+        object.spec.template.spec.containers.all(c,
+          ["cgr.dev", "mycompany.com"].exists(i, c.image.startsWith(i))
         )
+      message: "Forbidden image registry"
