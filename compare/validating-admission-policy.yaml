@@ -1,4 +1,4 @@
-# VAP
+# ValidatingAdmissionPolicy
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: ValidatingAdmissionPolicy
 metadata:
@@ -16,3 +16,15 @@ spec:
         object.spec.containers.all(c,
             c.?securityContext.?privileged.orValue(false) == false
         )
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: "privileged-container"
+spec:
+  policyName: "privileged-container"
+  validationActions: [Deny]
+  matchResources:
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: default
