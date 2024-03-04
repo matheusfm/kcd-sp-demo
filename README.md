@@ -12,7 +12,7 @@ no [KCD São Paulo 2024](https://community.cncf.io/events/details/cncf-kcd-brasi
 - [Kind](https://kind.sigs.k8s.io/) 
 - kubectl
 
-Os comandos usados nesta demos estão no arquivo [Makefile](Makefile) e você pode acessar para mais detalhes.
+Os comandos usados nesta demo estão no arquivo [Makefile](Makefile). Acesse para mais detalhes.
 
 ### Criando um cluster kind
 
@@ -38,7 +38,7 @@ make example-3
 
 ### Aplicando recursos de amostra
 
-Para testar cada política asima, aplique o Deployment e Pod de exemplo com os comandos abaixo:
+Para testar cada política acima, aplique o Deployment e Pod de exemplo com os comandos abaixo:
 
 ```shell
 # Deployment
