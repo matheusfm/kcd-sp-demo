@@ -1,10 +1,9 @@
 KIND_CLUSTER_NAME ?= "demo"
-KIND_CONFIG ?= "./kind-config.yaml"
 NAMESPACE ?= "default"
 
 .PHONY: kind-create-cluster
 kind-create-cluster:
-	kind create cluster --config ${KIND_CONFIG} --name ${KIND_CLUSTER_NAME}
+	kind create cluster --name ${KIND_CLUSTER_NAME}
 
 .PHONY: check-api
 check-api:

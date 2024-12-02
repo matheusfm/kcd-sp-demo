@@ -9,17 +9,26 @@ no [KCD São Paulo 2024](https://community.cncf.io/events/details/cncf-kcd-brasi
 ## Executando os exemplos
 
 ### Pré-requisitos
-- [Kind](https://kind.sigs.k8s.io/) 
+- [Kind](https://kind.sigs.k8s.io/) (versão mais recente)
 - kubectl
 
 Os comandos usados nesta demo estão no arquivo [Makefile](Makefile). Acesse para mais detalhes.
 
 ### Criando um cluster kind
 
-Este comando cria um cluster Kubernetes com Kind na versão 1.29.2 com a _feature gate_ `ValidatingAdmissionPolicy` habilitada.
+Este comando cria um cluster Kubernetes com Kind.
 
 ```shell
 make kind-create-cluster
+```
+
+A API `ValidatingAdmissionPolicy` é estável desde a versão 1.30 do Kubernetes. 
+Se você estiver usando [a última versão do Kind](https://github.com/kubernetes-sigs/kind/releases/latest), 
+o cluster Kubernetes também será criado na última versão.
+
+Execute o comando abaixo para verificar se a API está disponível:
+```shell
+make check-api
 ```
 
 ### Aplicando as políticas
